@@ -37,14 +37,17 @@ public class SlidingWindowCounter implements RateLimiter{
                         "local value = tonumber(ARGV[1]); " +
                         "local rank = tonumber(ARGV[1]); " +
                         "local allowed = tonumber(ARGV[2]);"+
-                        "redis.call('ZADD', key,'NX',rank,value); " +
                         "local window=tonumber(ARGV[3]);"+
                         "redis.call('ZREMRANGEBYSCORE', key, 0, value-window);"+
                         "local currentSize=tonumber(redis.call('ZCARD',key));"+
-                        "if (currentSize<= allowed) then "+
-                        "return true;"+
+                        "if (currentSize< allowed) then "+
+
+                        "   redis.call('ZADD', key,'NX',rank,value); " +
+                        "   redis.call('ZREMRANGEBYSCORE', key, 0, value-window);"+
+                        "   redis.call('EXPIRE', key, window)"+
+                        "   return true;"+
                         "else " +
-                        "return false; " +
+                        "   return false; " +
                         "end";
 
     }

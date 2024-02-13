@@ -57,7 +57,8 @@ public class RedisHandler {
 
     public boolean scriptEval(String scriptEval,String name,Object[] keys,Object[] values){
         RScript script = redisson.getScript(StringCodec.INSTANCE);
-        Boolean isAllowed = script.eval(name, RScript.Mode.READ_WRITE,scriptEval, RScript.ReturnType.BOOLEAN, Arrays.asList(keys),values);
+        Boolean isAllowed = script.eval(name, RScript.Mode.READ_WRITE,scriptEval, RScript.ReturnType.BOOLEAN,
+                                            Arrays.asList(keys),values);
         return isAllowed;
     }
 }
